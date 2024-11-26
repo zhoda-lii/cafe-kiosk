@@ -1,36 +1,41 @@
 public class Cup {
 	private String size;
 	private double price;
-	private int amount;
+	private int quantity;
 	
-	public Cup(String size,int amount) {
-		super();
+	public Cup(String size, int quantity) {
+		// super();
 		this.size = size;
-		this.amount = amount;
+		this.quantity = quantity;
 		price = 0.0;	
 	}
 
 	public String getSize() {
 		return size;
 	}
+	
 	public void setSize(String size) {
 		this.size = size;
 	}
+
 	public double getPrice() {
 		return price;
 	}
+
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public int getAmount() {
-		return amount;
+
+	public int getQuantity() {
+		return quantity;
 	}
-	public void setAmount(int amount) {
-		this.amount = amount;
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("%d %s glass(es) of ",this.getAmount(),this.getSize());
+		return String.format("%d %s cup(s) of ", this.getQuantity(), this.getSize());
 	}
 }
