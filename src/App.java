@@ -13,14 +13,15 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+// import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 
+// Use JFrame as the parent class of the App
+// Use ActionListener as the interface of the App
 public class App extends JFrame implements ActionListener {
     // Common Variables
 	private JLabel              lblSize, lblProduct, lblQuantity, lblOrders;
-	private JTextField          txtQuantity;
     private JSeparator          sepHorLine;
     private JTextArea           txtArea;
     private Border              borTextArea;
@@ -31,17 +32,62 @@ public class App extends JFrame implements ActionListener {
 	private ButtonGroup         btnGrpCupProd;
 	private JRadioButton        rdbCoffee, rdbJuice, rdbTea, rdbWater;
 	private JButton             btnAddCupProd;
+	private JTextField          txtQtyCups;
 
     // Cakes Variables
 	private JComboBox<String>   cmbCakeSize;
 	private ButtonGroup         btnGrpCakeProd;
 	private JRadioButton        rdbChoco, rdbStraw, rdbOreo;
 	private JButton             btnAddCakeProd;
+	private JTextField          txtQtyCakes;
+
+	ArrayList<Cup> cup_order_items = new ArrayList<Cup>();
 
 
-    // Method from ActionListener
     @Override
     public void actionPerformed(ActionEvent e) {
+		
+
+		// Action for the Add Item for Cup Products
+		if (e.getSource().equals(btnAddCupProd)) {
+			if (!(txtQtyCups.getText().isEmpty()) &&
+				rdbCoffee.isSelected() || rdbJuice.isSelected() || rdbTea.isSelected() || rdbWater.isSelected())
+			{
+				try {
+					String cupSize = (String)cmbCupSize.getSelectedItem();
+					int cupQty = Integer.parseInt(txtQtyCups.getText().trim());
+					
+					Cup cup;
+					if (rdbCoffee.isSelected()) {
+						cup = new Coffee(cupSize, cupQty, this);
+					// } else if (rdbJuice.isSelected())  {
+					// 	cps = new Juice(size_of, amount_of, this);
+					// } else if (rdbTea.isSelected())    {
+					// 	cps = new Tea(size_of, amount_of, this);
+					} else { // rdbWater
+						cup = new Water(cupSize, cupQty, this);
+					}
+					txtQtyCups.setText(null);
+					cup_order_items.add(cup);
+					// lblReport.setText(cps.toString()+" added");
+					txtArea.append(cup.toString() + "\n");
+					btnGrpCupProd.clearSelection();
+					// Enable order button
+					btnOrder.setEnabled(true);
+
+				// If the data in quantity field cannot be converted to integer
+				} catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(this, "Enter quantity as integer.");
+				}
+
+			// If none of the radio buttons are selected or the quantity field is empty
+			} else {
+				JOptionPane.showMessageDialog(this, "Select a drink and enter quantity."); 
+			}
+		}
+
+		// Action for the Add Item for Cake Products
+
 
     }
 
@@ -51,8 +97,9 @@ public class App extends JFrame implements ActionListener {
 		setSize(600, 900);
 		setLocationRelativeTo(null);
 		setTitle("Cups & Cakes");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		initElements();
-		// btnAdd.addActionListener(this); 
+		btnAddCupProd.addActionListener(this); 
 		// btnOrder.addActionListener(this);
 		setVisible(true);
     }
@@ -99,8 +146,8 @@ public class App extends JFrame implements ActionListener {
 		add(rdbTea);
 
 		// For Water
-		rdbWater = new JRadioButton("Water");
-		rdbWater.setSize(75, 50);
+		rdbWater = new JRadioButton("Sparkling Water");
+		rdbWater.setSize(125, 50);
 		rdbWater.setLocation(320, 110);
 		add(rdbWater);
 		
@@ -120,10 +167,10 @@ public class App extends JFrame implements ActionListener {
 		add(lblQuantity);
 		
         // Text field for Cup Quantity
-		txtQuantity = new JTextField();
-		txtQuantity.setSize(100, 25);
-		txtQuantity.setLocation(100, 185);
-		add(txtQuantity);
+		txtQtyCups = new JTextField();
+		txtQtyCups.setSize(100, 25);
+		txtQtyCups.setLocation(100, 185);
+		add(txtQtyCups);
     }
 
     public void initAddCupProd() {
@@ -190,10 +237,10 @@ public class App extends JFrame implements ActionListener {
 		add(lblQuantity);
 		
         // Text field for Cake Quantity
-		txtQuantity = new JTextField();
-		txtQuantity.setSize(100, 25);
-		txtQuantity.setLocation(100, 485);
-		add(txtQuantity);
+		txtQtyCakes = new JTextField();
+		txtQtyCakes.setSize(100, 25);
+		txtQtyCakes.setLocation(100, 485);
+		add(txtQtyCakes);
     }
 
     public void initAddCakeProd() {
@@ -239,7 +286,7 @@ public class App extends JFrame implements ActionListener {
         borTextArea = BorderFactory.createLineBorder(java.awt.Color.GRAY, 1);
 
         // Text Area for multi-line text
-        txtArea = new JTextArea();
+        txtArea = new JTextArea("");
         txtArea.setEditable(false);
         txtArea.setLineWrap(true);
         txtArea.setWrapStyleWord(true);
@@ -256,6 +303,8 @@ public class App extends JFrame implements ActionListener {
 		add(btnOrder);
 
     }
+
+
 
     // Main Function
     public static void main(String[] args) {
