@@ -6,7 +6,8 @@ public class Water extends Cup {
 	public Water(String size, int quantity, App app) {
 		super(size, quantity);
 
-		boolean yesSelected = (JOptionPane.showConfirmDialog(app, "Would you like ice?", "Ice", JOptionPane.YES_NO_OPTION) == 0);
+		boolean yesSelected = (JOptionPane.showConfirmDialog(app, "Would you like ice?", "Ice",
+				JOptionPane.YES_NO_OPTION) == 0);
 		if (yesSelected) {
 			hasIce = true;
 		} else {
@@ -21,7 +22,7 @@ public class Water extends Cup {
 		} else { // Large
 			price = 3.5;
 		}
-		
+
 		if (hasIce) {
 			price += 0.25;
 		}
