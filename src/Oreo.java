@@ -2,37 +2,51 @@ import javax.swing.JOptionPane;
 
 public class Oreo extends Cake {
     private boolean hasOreo;
+    private int response;
 
     public Oreo(String size, int quantity, App app) {
         super(size, quantity);
 
-        boolean yesSelected = (JOptionPane.showConfirmDialog(app, "Would you like to add Oreo Crumbs?", "Orea Crumbs",
-                JOptionPane.YES_NO_OPTION) == 0);
-        if (yesSelected) {
+        response = JOptionPane.showConfirmDialog(app, 
+            "Would you like to add extra oreo crumbs for $0.50?", 
+            "Choco Chips", JOptionPane.YES_NO_OPTION);
+
+        if (response == JOptionPane.YES_OPTION) {
             hasOreo = true;
-        } else {
+        } else if (response == JOptionPane.NO_OPTION) {
             hasOreo = false;
+        } else if (response == JOptionPane.CLOSED_OPTION) {
+            return;
         }
 
         double price;
         if (size.equals("Slice")) {
             price = 5;
         } else { // Whole Cake
-            price = 10;
+            price = 40;
         }
 
         if (hasOreo) {
-            price += 2.50;
+            price += 0.50;
         }
         setPrice(price);
     }
 
+	@Override
+	public String getName() {
+        if (response == JOptionPane.CLOSED_OPTION) {
+            return "";
+        }
+        
+        if (hasOreo) {
+            return "Oreo Cake with Oreo Crumbs";
+        } else {
+            return "Plain Oreo Cake";
+        }
+	}
+
     @Override
     public String toString() {
-        if (hasOreo) {
-            return super.toString() + "Oreo Cake with Oreo Crumb[s]";
-        } else {
-            return super.toString() + "Plain Oreo Cake";
-        }
+		return super.toString() + getName();
     }
 }

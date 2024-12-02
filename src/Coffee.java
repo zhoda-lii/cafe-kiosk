@@ -2,15 +2,21 @@ import javax.swing.JOptionPane;
 
 public class Coffee extends Cup {
 	private boolean hasMilk; 
+    private int response;
 
 	public Coffee(String size, int quantity, App app) {
 		super(size, quantity);
 
-		boolean yesSelected = (JOptionPane.showConfirmDialog(app, "Would you like milk?", "Milk", JOptionPane.YES_NO_OPTION) == 0);
-		if (yesSelected) {
+		response = JOptionPane.showConfirmDialog(app,
+				"Would you like to add almond milk for extra $0.25?",
+				"Milk", JOptionPane.YES_NO_OPTION);
+
+		if (response == JOptionPane.YES_OPTION) {
 			hasMilk = true;
-		} else {
+		} else if (response == JOptionPane.NO_OPTION) {
 			hasMilk = false;
+		} else if (response == JOptionPane.CLOSED_OPTION) {
+			return;
 		}
 
 		double price;
@@ -29,11 +35,20 @@ public class Coffee extends Cup {
 	}
 
 	@Override
-	public String toString() {
+	public String getName() {
+        if (response == JOptionPane.CLOSED_OPTION) {
+            return "";
+        }
+        
 		if (hasMilk) {
-			return super.toString() + "Coffee with milk";
+			return "Coffee with Almond Milk";
 		} else {
-			return super.toString() + "Coffee without milk";
+			return "Coffee";
 		}
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + getName();
 	}
 }

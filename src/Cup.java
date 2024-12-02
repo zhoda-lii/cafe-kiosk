@@ -34,7 +34,10 @@ public class Cup {
 		this.quantity = quantity;
 	}
 	
-	@Override
+	public String getName() {
+		return "";
+	}
+
 	public String toString() {
 		return String.format("%d %s cup(s) of ", this.getQuantity(), this.getSize());
 	}

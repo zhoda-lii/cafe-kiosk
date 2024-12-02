@@ -1,5 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -10,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -20,7 +23,7 @@ import javax.swing.border.Border;
 // Use ActionListener as the interface of the App
 public class App extends JFrame implements ActionListener {
 	// Common Variables
-	private JLabel lblSize, lblProduct, lblQuantity, lblOrders;
+	private JLabel lblSize, lblProduct, lblPrice, lblQuantity, lblOrders;
 	private JSeparator sepHorLine;
 	private JTextArea txtArea;
 	private Border borTextArea;
@@ -36,17 +39,15 @@ public class App extends JFrame implements ActionListener {
 	// Cakes Variables
 	private JComboBox<String> cmbCakeSize;
 	private ButtonGroup btnGrpCakeProd;
-	private JRadioButton rdbChoco, rdbStraw, rdbOreo;
+	private JRadioButton rdbChoco, rdbOreo, rdbStraw;
 	private JButton btnAddCakeProd;
 	private JTextField txtQtyCakes;
 
 	ArrayList<Cup> cup_order_items = new ArrayList<Cup>();
-
 	ArrayList<Cake> cake_order_items = new ArrayList<Cake>();
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		// Action for the Add Item for Cup Products
 		if (e.getSource().equals(btnAddCupProd)) {
 			if (!(txtQtyCups.getText().isEmpty()) &&
@@ -58,27 +59,33 @@ public class App extends JFrame implements ActionListener {
 					Cup cup;
 					if (rdbCoffee.isSelected()) {
 						cup = new Coffee(cupSize, cupQty, this);
-						// } else if (rdbJuice.isSelected()) {
-						// cps = new Juice(size_of, amount_of, this);
+					} else if (rdbJuice.isSelected()) {
+						cup = new Juice(cupSize, cupQty, this);
 					} else if (rdbTea.isSelected()) {
 						cup = new Tea(cupSize, cupQty, this);
 					} else { // rdbWater
 						cup = new Water(cupSize, cupQty, this);
 					}
+
+					// Exit if cup is not initialized
+					if (cup.getName().equals("")) {
+						return;
+					}
+
 					txtQtyCups.setText(null);
 					cup_order_items.add(cup);
-					// lblReport.setText(cps.toString()+" added");
 					txtArea.append(cup.toString() + "\n");
 					btnGrpCupProd.clearSelection();
+
 					// Enable order button
 					btnOrder.setEnabled(true);
 
-					// If the data in quantity field cannot be converted to integer
+				// If the data in quantity field cannot be converted to integer
 				} catch (NumberFormatException e1) {
 					JOptionPane.showMessageDialog(this, "Enter quantity as integer.");
 				}
 
-				// If none of the radio buttons are selected or the quantity field is empty
+			// If none of the radio buttons are selected or the quantity field is empty
 			} else {
 				JOptionPane.showMessageDialog(this, "Select a drink and enter quantity.");
 			}
@@ -100,24 +107,143 @@ public class App extends JFrame implements ActionListener {
 					} else { // rdbOrea
 						cake = new Oreo(cakeSize, cakeQty, this);
 					}
+
+					// Exit if cake is not initialized
+					if (cake.getName().equals("")) {
+						return;
+					}
+
 					txtQtyCakes.setText(null);
 					cake_order_items.add(cake);
-					// lblReport.setText(cps.toString()+" added");
 					txtArea.append(cake.toString() + "\n");
 					btnGrpCakeProd.clearSelection();
+
 					// Enable order button
 					btnOrder.setEnabled(true);
 
-					// If the data in quantity field cannot be converted to integer
+				// If the data in quantity field cannot be converted to integer
 				} catch (NumberFormatException e1) {
 					JOptionPane.showMessageDialog(this, "Enter quantity as integer.");
 				}
 
-				// If none of the radio buttons are selected or the quantity field is empty
+			// If none of the radio buttons are selected or the quantity field is empty
 			} else {
 				JOptionPane.showMessageDialog(this, "Select a cake and enter quantity.");
 			}
 		}
+	
+		// Action for the Order Button
+		if(e.getSource().equals(btnOrder)) {
+
+			// Get the current date and time
+        	LocalDateTime currentDateTime = LocalDateTime.now();
+			
+			// Format the date and time
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' hh:mm:ss a");
+			String formattedDateTime = currentDateTime.format(formatter);
+
+			String invoiceReport = "CUPS & CAKES\n";
+			invoiceReport += "Date: " + formattedDateTime + "\n";
+			invoiceReport += "--------------------------------------------------------------------\n";
+			invoiceReport += String.format("%-35s %-10s %-11s %-11s\n", "Item", "Quantity", "Price", "Total");
+			invoiceReport += "--------------------------------------------------------------------\n";
+			
+			// Initialize Subtotal
+			double subTotal = 0.0;
+
+			// Loop through the cups
+			for (int i = 0; i < cup_order_items.size(); i++) {
+				// Add label on first iteration
+				if (i == 0) {
+					invoiceReport += "Cups\n";
+				}
+				Cup cupi = cup_order_items.get(i);
+				// report += cupi.toString();
+				double totalPriceCups = cupi.getQuantity() * cupi.getPrice();
+				subTotal += totalPriceCups;
+
+				// Append item details to the report
+				invoiceReport += String.format( "%-35s %-10d $%-10.2f $%-10.2f\n", 
+							cupi.getSize().substring(0, 1) + " " + cupi.getName(), 
+							cupi.getQuantity(), 
+							cupi.getPrice(), 
+							totalPriceCups);
+			}
+
+			// Loop through the cakes
+			for (int i = 0; i < cake_order_items.size(); i++) {
+				// Add label on first iteration
+				if (i == 0) {
+					if (cup_order_items.size() > 0) {
+						invoiceReport += "\nCakes\n";
+					} else {
+						invoiceReport += "Cakes\n";
+					}
+				}
+				Cake cakei = cake_order_items.get(i);
+				double totalPriceCakes = cakei.getQuantity() * cakei.getPrice();
+				subTotal += totalPriceCakes;
+
+				// Append item details to the report
+				invoiceReport += String.format( "%-35s %-10d $%-10.2f $%-10.2f\n", 
+							cakei.getSize().substring(0, 1) + " " + cakei.getName(), 
+							cakei.getQuantity(), 
+							cakei.getPrice(), 
+							totalPriceCakes);
+			}
+
+			// Format subtotal, tax and total amount
+			invoiceReport += "--------------------------------------------------------------------\n";
+			invoiceReport += String.format("%52s %5s $%-10.2f\n",
+						 "SUBTOTAL", " ", subTotal);
+			invoiceReport += String.format("%52s %5s $%-10.2f\n",
+						"TAX(5%)", " ", subTotal * 0.05);
+			invoiceReport += "\n";
+			invoiceReport += String.format("%52s %5s $%-10.2f\n",
+						"TOTAL AMOUNT", " ", subTotal * 1.05);
+			invoiceReport += "--------------------------------------------------------------------\n";
+			
+			// Create a JTextArea with monospaced font for alignment
+			JTextArea textArea = new JTextArea(invoiceReport);
+			textArea.setFont(new java.awt.Font("Courier New", java.awt.Font.PLAIN, 12));
+			textArea.setEditable(false);
+			textArea.setBackground(null); // Make it blend with the dialog
+
+			// Show the message dialog with the JTextArea
+			JOptionPane.showMessageDialog(null, textArea, "Invoice", JOptionPane.INFORMATION_MESSAGE);
+
+			// Display a dialog to choose payment method
+			String[] options = {"Cash", "Card"};
+			String totalAmount = String.format("%.2f", subTotal * 1.05); 
+			int choice = JOptionPane.showOptionDialog(this,
+				"Total Amount: $" + totalAmount + "\nPlease confirm your payment method",
+				"Payment Confirmation",
+				JOptionPane.DEFAULT_OPTION,
+				JOptionPane.INFORMATION_MESSAGE,
+				null,
+				options,
+				options[0]);  // Default option, here "Cash"
+
+			// Check the user's choice
+			if (choice == 0) {
+				JOptionPane.showMessageDialog(this, "Please pay $" + totalAmount + " at the counter.");
+			} else if (choice == 1) {
+				JOptionPane.showMessageDialog(this, "A total amount of $" + totalAmount + " will be deducted from your account.");
+			}
+
+			// Thank you message
+			JOptionPane.showMessageDialog(this, 
+					"Thank you for your purchase!\nWe look forward to seeing you again at Cups & Cakes.", 
+					"Thank You", 
+					JOptionPane.INFORMATION_MESSAGE);
+
+			// Clear variables
+			txtArea.setText(null);
+			btnOrder.setEnabled(false);
+			cup_order_items.clear();
+			cake_order_items.clear();
+		}	
+
 	}
 
 	// Constructor for the App
@@ -130,7 +256,7 @@ public class App extends JFrame implements ActionListener {
 		initElements();
 		btnAddCupProd.addActionListener(this);
 		btnAddCakeProd.addActionListener(this);
-		// btnOrder.addActionListener(this);
+		btnOrder.addActionListener(this);
 		setVisible(true);
 	}
 
@@ -156,30 +282,60 @@ public class App extends JFrame implements ActionListener {
 		lblProduct.setSize(500, 50);
 		lblProduct.setLocation(100, 75);
 		add(lblProduct);
-
+		// For Size Label
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>S<br>M<br>L</html>");
+		lblPrice.setSize(75, 75);
+		lblPrice.setLocation(105, 120);
+		add(lblPrice);
+		
 		// For Coffee
 		rdbCoffee = new JRadioButton("Coffee");
-		rdbCoffee.setSize(75, 50);
+		rdbCoffee.setSize(75, 25);
 		rdbCoffee.setLocation(100, 110);
 		add(rdbCoffee);
+		// For Coffee Price
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>$2.00<br>$2.50<br>$3.00</html>");
+		lblPrice.setSize(75, 75);
+		lblPrice.setLocation(125, 120);
+		add(lblPrice);
 
 		// For Juice
 		rdbJuice = new JRadioButton("Juice");
-		rdbJuice.setSize(75, 50);
+		rdbJuice.setSize(75, 25);
 		rdbJuice.setLocation(175, 110);
 		add(rdbJuice);
+		// For Juice Price
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>$3.00<br>$4.00<br>$5.00</html>");
+		lblPrice.setSize(75, 75);
+		lblPrice.setLocation(200, 120);
+		add(lblPrice);
 
 		// For Tea
 		rdbTea = new JRadioButton("Tea");
-		rdbTea.setSize(70, 50);
+		rdbTea.setSize(70, 25);
 		rdbTea.setLocation(250, 110);
 		add(rdbTea);
+		// For Tea Price
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>$2.50<br>$3.50<br>$4.50</html>");
+		lblPrice.setSize(75, 75);
+		lblPrice.setLocation(275, 120);
+		add(lblPrice);
 
 		// For Water
 		rdbWater = new JRadioButton("Sparkling Water");
-		rdbWater.setSize(125, 50);
+		rdbWater.setSize(125, 25);
 		rdbWater.setLocation(320, 110);
 		add(rdbWater);
+		// For Water Price
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>$2.50<br>$3.50<br>$4.50</html>");
+		lblPrice.setSize(75, 75);
+		lblPrice.setLocation(345, 120);
+		add(lblPrice);
 
 		// For Cup Products Group
 		btnGrpCupProd = new ButtonGroup();
@@ -191,15 +347,15 @@ public class App extends JFrame implements ActionListener {
 
 	public void initCupQuantity() {
 		// Label for Cup Quantity
-		lblQuantity = new JLabel("Input the cup quantity you want to order:");
+		lblQuantity = new JLabel("Input the quantity you want to order:");
 		lblQuantity.setSize(500, 50);
-		lblQuantity.setLocation(100, 145);
+		lblQuantity.setLocation(100, 185);
 		add(lblQuantity);
 
 		// Text field for Cup Quantity
 		txtQtyCups = new JTextField();
 		txtQtyCups.setSize(100, 25);
-		txtQtyCups.setLocation(100, 185);
+		txtQtyCups.setLocation(100, 225);
 		add(txtQtyCups);
 	}
 
@@ -207,7 +363,7 @@ public class App extends JFrame implements ActionListener {
 		// Add Item Button for Cups
 		btnAddCupProd = new JButton("Add Item(s)");
 		btnAddCupProd.setSize(120, 40);
-		btnAddCupProd.setLocation(100, 230);
+		btnAddCupProd.setLocation(350, 240);
 		add(btnAddCupProd);
 	}
 
@@ -233,24 +389,48 @@ public class App extends JFrame implements ActionListener {
 		lblProduct.setSize(500, 50);
 		lblProduct.setLocation(100, 375);
 		add(lblProduct);
+		// For Size Label
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>S<br>W</html>");
+		lblPrice.setSize(75, 50);
+		lblPrice.setLocation(105, 425);
+		add(lblPrice);
 
 		// For Chocolate Chip
 		rdbChoco = new JRadioButton("Chocolate Chip");
-		rdbChoco.setSize(120, 50);
+		rdbChoco.setSize(120, 25);
 		rdbChoco.setLocation(100, 410);
 		add(rdbChoco);
+		// For Chocolate Chip Price
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>$4.50<br>$35.00</html>");
+		lblPrice.setSize(75, 50);
+		lblPrice.setLocation(125, 425);
+		add(lblPrice);
+
+		// For Oreo
+		rdbOreo = new JRadioButton("Oreo cake");
+		rdbOreo.setSize(100, 25);
+		rdbOreo.setLocation(220, 410);
+		add(rdbOreo);
+		// For Oreo Price
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>$5.00<br>$40.00</html>");
+		lblPrice.setSize(75, 50);
+		lblPrice.setLocation(245, 425);
+		add(lblPrice);
 
 		// For Strawberry Cheesecake
 		rdbStraw = new JRadioButton("Strawberry Cheesecake");
-		rdbStraw.setSize(170, 50);
-		rdbStraw.setLocation(220, 410);
+		rdbStraw.setSize(170, 25);
+		rdbStraw.setLocation(320, 410);
 		add(rdbStraw);
-
-		// For Oreo
-		rdbOreo = new JRadioButton("Oreo");
-		rdbOreo.setSize(100, 50);
-		rdbOreo.setLocation(390, 410);
-		add(rdbOreo);
+		// For Strawberry Cheesecake Price
+		lblPrice = new JLabel();
+		lblPrice.setText("<html>$6.00<br>$45.00</html>");
+		lblPrice.setSize(75, 50);
+		lblPrice.setLocation(350, 425);
+		add(lblPrice);
 
 		// For Cake Products Group
 		btnGrpCakeProd = new ButtonGroup();
@@ -261,15 +441,15 @@ public class App extends JFrame implements ActionListener {
 
 	public void initCakeQuantity() {
 		// Label for Cake Quantity
-		lblQuantity = new JLabel("Input the cake quantity you want to order:");
+		lblQuantity = new JLabel("Input the quantity you want to order:");
 		lblQuantity.setSize(500, 50);
-		lblQuantity.setLocation(100, 445);
+		lblQuantity.setLocation(100, 485);
 		add(lblQuantity);
 
 		// Text field for Cake Quantity
 		txtQtyCakes = new JTextField();
 		txtQtyCakes.setSize(100, 25);
-		txtQtyCakes.setLocation(100, 485);
+		txtQtyCakes.setLocation(100, 525);
 		add(txtQtyCakes);
 	}
 
@@ -277,7 +457,7 @@ public class App extends JFrame implements ActionListener {
 		// Add Item Button for Cakes
 		btnAddCakeProd = new JButton("Add Item(s)");
 		btnAddCakeProd.setSize(120, 40);
-		btnAddCakeProd.setLocation(100, 530);
+		btnAddCakeProd.setLocation(350, 540);
 		add(btnAddCakeProd);
 	}
 
@@ -312,7 +492,7 @@ public class App extends JFrame implements ActionListener {
 		add(lblOrders);
 
 		// Create a solid border with a gray color and 1px width for text area
-		borTextArea = BorderFactory.createLineBorder(java.awt.Color.GRAY, 1);
+		borTextArea = BorderFactory.createLineBorder(java.awt.Color.GRAY, 0);
 
 		// Text Area for multi-line text
 		txtArea = new JTextArea("");
@@ -320,9 +500,11 @@ public class App extends JFrame implements ActionListener {
 		txtArea.setLineWrap(true);
 		txtArea.setWrapStyleWord(true);
 		txtArea.setBorder(borTextArea);
-		txtArea.setSize(300, 100);
-		txtArea.setLocation(100, 650);
-		add(txtArea);
+		
+		// Wrap the JTextArea inside a JScrollPane
+		JScrollPane scrollPane = new JScrollPane(txtArea);
+		scrollPane.setBounds(100, 650, 300, 100); // Set position and size of the scroll pane
+		add(scrollPane);
 
 		// Add Order Button
 		btnOrder = new JButton("Order");
