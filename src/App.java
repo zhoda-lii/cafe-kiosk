@@ -17,7 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-// import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 // Use JFrame as the parent class of the App
@@ -309,6 +308,7 @@ public class App extends JFrame implements ActionListener {
 		rdbCoffee = new JRadioButton("Coffee");
 		rdbCoffee.setSize(75, 25);
 		rdbCoffee.setLocation(100, 110);
+		rdbCoffee.setBackground(new Color(0x06241));
 		add(rdbCoffee);
 		// For Coffee Price
 		lblPrice = new JLabel();
@@ -322,6 +322,7 @@ public class App extends JFrame implements ActionListener {
 		rdbJuice = new JRadioButton("Juice");
 		rdbJuice.setSize(75, 25);
 		rdbJuice.setLocation(175, 110);
+		rdbJuice.setBackground(new Color(0x06241));
 		add(rdbJuice);
 		// For Juice Price
 		lblPrice = new JLabel();
@@ -335,6 +336,7 @@ public class App extends JFrame implements ActionListener {
 		rdbTea = new JRadioButton("Tea");
 		rdbTea.setSize(70, 25);
 		rdbTea.setLocation(250, 110);
+		rdbTea.setBackground(new Color(0x06241));
 		add(rdbTea);
 		// For Tea Price
 		lblPrice = new JLabel();
@@ -348,6 +350,7 @@ public class App extends JFrame implements ActionListener {
 		rdbWater = new JRadioButton("Sparkling Water");
 		rdbWater.setSize(125, 25);
 		rdbWater.setLocation(320, 110);
+		rdbWater.setBackground(new Color(0x06241));
 		add(rdbWater);
 		// For Water Price
 		lblPrice = new JLabel();
@@ -436,6 +439,7 @@ public class App extends JFrame implements ActionListener {
 		rdbChoco.setSize(120, 25);
 		rdbChoco.setLocation(100, 410);
 		rdbChoco.setForeground(Color.WHITE);
+		rdbChoco.setBackground(new Color(0x06241));
 		add(rdbChoco);
 		// For Chocolate Chip Price
 		lblPrice = new JLabel();
@@ -450,6 +454,7 @@ public class App extends JFrame implements ActionListener {
 		rdbOreo.setSize(100, 25);
 		rdbOreo.setLocation(220, 410);
 		rdbOreo.setForeground(Color.WHITE);
+		rdbOreo.setBackground(new Color(0x06241));
 		add(rdbOreo);
 		// For Oreo Price
 		lblPrice = new JLabel();
@@ -464,6 +469,7 @@ public class App extends JFrame implements ActionListener {
 		rdbStraw.setSize(170, 25);
 		rdbStraw.setLocation(320, 410);
 		rdbStraw.setForeground(Color.WHITE);
+		rdbStraw.setBackground(new Color(0x06241));
 		add(rdbStraw);
 		// For Strawberry Cheesecake Price
 		lblPrice = new JLabel();
