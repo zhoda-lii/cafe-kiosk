@@ -255,7 +255,7 @@ public class App extends JFrame implements ActionListener {
 
 	// Constructor for the App
 	public App() {
-		setLayout(null);
+		setLayout(null); // No layout manager
 		setSize(600, 900);
 		setLocationRelativeTo(null);
 		setTitle("Cups & Cakes");
@@ -266,7 +266,7 @@ public class App extends JFrame implements ActionListener {
 		btnOrder.addActionListener(this);
 		setResizable(false);
 		setVisible(true);
-		// BackGround Colour
+		// Gets the frame object and sets bg colour
 		getContentPane().setBackground(greenColor);
 	}
 
