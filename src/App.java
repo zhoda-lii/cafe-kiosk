@@ -231,8 +231,6 @@ public class App extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this,
 						"A total amount of $" + totalAmount + " will be deducted from your account.");
 			} else {
-				JOptionPane.showMessageDialog(this,
-						"Please Pay the total amount of $" + totalAmount + " .");
 				return;
 			}
 
