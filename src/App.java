@@ -43,6 +43,10 @@ public class App extends JFrame implements ActionListener {
 	private JButton btnAddCakeProd;
 	private JTextField txtQtyCakes;
 
+	// Colour for UI app
+	Color greenColor = new Color(0x06241);
+
+	// Arrays for products
 	ArrayList<Cup> cup_order_items = new ArrayList<Cup>();
 	ArrayList<Cake> cake_order_items = new ArrayList<Cake>();
 
@@ -248,8 +252,6 @@ public class App extends JFrame implements ActionListener {
 
 	}
 
-	// Colour for UI app
-	Color greenColor = new Color(0x06241);
 
 	// Constructor for the App
 	public App() {
@@ -262,12 +264,10 @@ public class App extends JFrame implements ActionListener {
 		btnAddCupProd.addActionListener(this);
 		btnAddCakeProd.addActionListener(this);
 		btnOrder.addActionListener(this);
+		setResizable(false);
 		setVisible(true);
 		// BackGround Colour
-		getContentPane().setBackground(new Color(0x06241));
-		// Footer Colour
-		setBackground(Color.GREEN);
-
+		getContentPane().setBackground(greenColor);
 	}
 
 	// Methods for the Cups Section
@@ -308,7 +308,7 @@ public class App extends JFrame implements ActionListener {
 		rdbCoffee = new JRadioButton("Coffee");
 		rdbCoffee.setSize(75, 25);
 		rdbCoffee.setLocation(100, 110);
-		rdbCoffee.setBackground(new Color(0x06241));
+		rdbCoffee.setBackground(greenColor);
 		add(rdbCoffee);
 		// For Coffee Price
 		lblPrice = new JLabel();
@@ -322,7 +322,7 @@ public class App extends JFrame implements ActionListener {
 		rdbJuice = new JRadioButton("Juice");
 		rdbJuice.setSize(75, 25);
 		rdbJuice.setLocation(175, 110);
-		rdbJuice.setBackground(new Color(0x06241));
+		rdbJuice.setBackground(greenColor);
 		add(rdbJuice);
 		// For Juice Price
 		lblPrice = new JLabel();
@@ -336,7 +336,7 @@ public class App extends JFrame implements ActionListener {
 		rdbTea = new JRadioButton("Tea");
 		rdbTea.setSize(70, 25);
 		rdbTea.setLocation(250, 110);
-		rdbTea.setBackground(new Color(0x06241));
+		rdbTea.setBackground(greenColor);
 		add(rdbTea);
 		// For Tea Price
 		lblPrice = new JLabel();
@@ -350,7 +350,7 @@ public class App extends JFrame implements ActionListener {
 		rdbWater = new JRadioButton("Sparkling Water");
 		rdbWater.setSize(125, 25);
 		rdbWater.setLocation(320, 110);
-		rdbWater.setBackground(new Color(0x06241));
+		rdbWater.setBackground(greenColor);
 		add(rdbWater);
 		// For Water Price
 		lblPrice = new JLabel();
@@ -414,7 +414,7 @@ public class App extends JFrame implements ActionListener {
 		cmbCakeSize.setSelectedIndex(0); // Default size is Slice
 		cmbCakeSize.setSize(100, 25);
 		cmbCakeSize.setLocation(100, 350);
-		cmbCakeSize.setForeground(new Color(0x06241));
+		cmbCakeSize.setForeground(greenColor);
 
 		add(cmbCakeSize);
 	}
@@ -439,7 +439,7 @@ public class App extends JFrame implements ActionListener {
 		rdbChoco.setSize(120, 25);
 		rdbChoco.setLocation(100, 410);
 		rdbChoco.setForeground(Color.WHITE);
-		rdbChoco.setBackground(new Color(0x06241));
+		rdbChoco.setBackground(greenColor);
 		add(rdbChoco);
 		// For Chocolate Chip Price
 		lblPrice = new JLabel();
@@ -454,7 +454,7 @@ public class App extends JFrame implements ActionListener {
 		rdbOreo.setSize(100, 25);
 		rdbOreo.setLocation(220, 410);
 		rdbOreo.setForeground(Color.WHITE);
-		rdbOreo.setBackground(new Color(0x06241));
+		rdbOreo.setBackground(greenColor);
 		add(rdbOreo);
 		// For Oreo Price
 		lblPrice = new JLabel();
@@ -469,7 +469,7 @@ public class App extends JFrame implements ActionListener {
 		rdbStraw.setSize(170, 25);
 		rdbStraw.setLocation(320, 410);
 		rdbStraw.setForeground(Color.WHITE);
-		rdbStraw.setBackground(new Color(0x06241));
+		rdbStraw.setBackground(greenColor);
 		add(rdbStraw);
 		// For Strawberry Cheesecake Price
 		lblPrice = new JLabel();
