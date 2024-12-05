@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,7 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 // Use JFrame as the parent class of the App
 // Use ActionListener as the interface of the App
@@ -26,7 +24,6 @@ public class App extends JFrame implements ActionListener {
 	private JLabel lblSize, lblProduct, lblPrice, lblQuantity, lblOrders;
 	private JSeparator sepHorLine;
 	private JTextArea txtArea;
-	private Border borTextArea;
 	private JButton btnOrder;
 
 	// Cups Variables
@@ -51,9 +48,9 @@ public class App extends JFrame implements ActionListener {
 	ArrayList<Cake> cake_order_items = new ArrayList<Cake>();
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent evt) {
 		// Action for the Add Item for Cup Products
-		if (e.getSource().equals(btnAddCupProd)) {
+		if (evt.getSource().equals(btnAddCupProd)) {
 			if (!(txtQtyCups.getText().isEmpty()) &&
 					rdbCoffee.isSelected() || rdbJuice.isSelected() || rdbTea.isSelected() || rdbWater.isSelected()) {
 				try {
@@ -96,7 +93,7 @@ public class App extends JFrame implements ActionListener {
 		}
 
 		// Action for the Add Item for Cake Products
-		if (e.getSource().equals(btnAddCakeProd)) {
+		if (evt.getSource().equals(btnAddCakeProd)) {
 			if (!(txtQtyCakes.getText().isEmpty()) &&
 					rdbChoco.isSelected() || rdbStraw.isSelected() || rdbOreo.isSelected()) {
 				try {
@@ -137,7 +134,7 @@ public class App extends JFrame implements ActionListener {
 		}
 
 		// Action for the Order Button
-		if (e.getSource().equals(btnOrder)) {
+		if (evt.getSource().equals(btnOrder)) {
 
 			// Get the current date and time
 			LocalDateTime currentDateTime = LocalDateTime.now();
@@ -210,7 +207,8 @@ public class App extends JFrame implements ActionListener {
 			JTextArea textArea = new JTextArea(invoiceReport);
 			textArea.setFont(new java.awt.Font("Courier New", java.awt.Font.PLAIN, 12));
 			textArea.setEditable(false);
-			textArea.setBackground(null); // Make it blend with the dialog
+			// Make it blend with the dialog
+			textArea.setBackground(null); 
 
 			// Show the message dialog with the JTextArea
 			JOptionPane.showMessageDialog(null, textArea, "Invoice", JOptionPane.INFORMATION_MESSAGE);
@@ -221,19 +219,21 @@ public class App extends JFrame implements ActionListener {
 			int choice = JOptionPane.showOptionDialog(this,
 					"Total Amount: $" + totalAmount + "\nPlease confirm your payment method",
 					"Payment Confirmation",
-					JOptionPane.DEFAULT_OPTION,
+					JOptionPane.DEFAULT_OPTION, // For Option Dialog
 					JOptionPane.INFORMATION_MESSAGE,
 					null,
 					options,
 					options[0]); // Default option, here "Cash"
 
 			// Check the user's choice
+			// Index 0 is Cash
 			if (choice == 0) {
 				JOptionPane.showMessageDialog(this, "Please pay $" + totalAmount + " at the counter.");
+			// Index 1 is Card
 			} else if (choice == 1) {
 				JOptionPane.showMessageDialog(this,
 						"A total amount of $" + totalAmount + " will be deducted from your account.");
-			} else {
+			} else { // Index 2 is Cancel
 				return;
 			}
 
@@ -264,10 +264,8 @@ public class App extends JFrame implements ActionListener {
 		btnAddCupProd.addActionListener(this);
 		btnAddCakeProd.addActionListener(this);
 		btnOrder.addActionListener(this);
-		setResizable(false);
+		setResizable(true);
 		setVisible(true);
-		// Gets the frame object and sets bg colour
-		getContentPane().setBackground(greenColor);
 	}
 
 	// Methods for the Cups Section
@@ -286,7 +284,6 @@ public class App extends JFrame implements ActionListener {
 		cmbCupSize.setLocation(100, 50);
 		cmbCupSize.setForeground(greenColor);
 		add(cmbCupSize);
-
 	}
 
 	public void initCupProduct() {
@@ -542,15 +539,11 @@ public class App extends JFrame implements ActionListener {
 		lblOrders.setForeground(Color.white);
 		add(lblOrders);
 
-		// Create a solid border with a gray color and 1px width for text area
-		borTextArea = BorderFactory.createLineBorder(java.awt.Color.GRAY, 0);
-
 		// Text Area for multi-line text
 		txtArea = new JTextArea("");
 		txtArea.setEditable(false);
 		txtArea.setLineWrap(true);
 		txtArea.setWrapStyleWord(true);
-		txtArea.setBorder(borTextArea);
 		txtArea.setForeground(greenColor);
 
 		// Wrap the JTextArea inside a JScrollPane
@@ -565,6 +558,8 @@ public class App extends JFrame implements ActionListener {
 		btnOrder.setEnabled(false);
 		add(btnOrder);
 
+		// Gets the frame object and sets bg colour
+		getContentPane().setBackground(greenColor);
 	}
 
 	// Main Function
