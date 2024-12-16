@@ -7,7 +7,7 @@ public class Cake {
 		// super();
         this.size = size;
         this.quantity = quantity;
-        price = 0.0;
+        this.price = 0.0;
     }
 
     public String getSize() {
